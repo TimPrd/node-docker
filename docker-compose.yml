@@ -1,0 +1,58 @@
+version: "3"
+services:
+    node:
+        # On précise le dockerfile .node dans le cas où il y'a plusieurs dockerfile 
+        build:
+            context: .
+            dockerfile: ./Dockerfile.node
+        # nom du container 
+        container_name: node
+        hostname: node
+        # Définition du répertoire courant 
+        working_dir: /usr/app
+        # On stipule que nous avons besoin de postgres d'abord
+        depends_on:
+            - postgres
+        # On assigne le stockage copy de tout dans le workdir 
+        volumes:
+            - .:/usr/app/
+            - /usr/app/node_modules
+        # port du node 3000 forwarder à notre machine sur localhost:3000
+        ports:
+            - '3000:3000'
+        # précise le .env
+        env_file: 
+            - .env
+        # pas besoin de network car il est crée automatiquement par default
+        # Sinon on peut le référencer de cette façon :
+            #networks:
+                #- node-postgres-net
+    
+    postgres:
+        # On prend directement l'image depuis le hub
+        image: postgres:10.4
+        # Assignation du port 5432 à notre port de machine 5432
+        ports:
+            - "5432:5432"
+        # Nom et hostname du container 
+        container_name: postgres
+        hostname: postgres
+        # Le répertoire par défault (psql)
+        working_dir: /home/psql
+        # Variable d'environnement pour le postgres (db, mdp, user)
+        # Assigné / crée au démarrage
+        environment:
+            POSTGRES_USER: root # nom du user (originalité!)
+            POSTGRES_PASSWORD: root # password (encore de l'originalité!)
+            POSTGRES_DB: db  # database db 
+        # On stock notre donnée dans un volume 
+        volumes:
+            - db_data:/home/psql/sql        
+
+# Création du volume partagé
+volumes:
+    db_data: {}
+
+
+#networks:
+    #node-postgres-net

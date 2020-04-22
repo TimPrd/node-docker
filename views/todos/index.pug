@@ -1,0 +1,7 @@
+extends layout
+
+block content 
+    h1="Todos : "
+    ul
+        each todo in todos
+            li(class=todo.is_done ? "done" : "undone") #{todo.title} : #{todo.is_done ? "Done": "Not done yet"}

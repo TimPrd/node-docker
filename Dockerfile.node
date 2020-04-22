@@ -1,0 +1,22 @@
+FROM node:10
+
+# On créer le workdir
+WORKDIR /usr/app
+# On copie le package et le lock dans le container 
+COPY package*.json ./
+# On install les dépendences
+RUN npm install
+
+# On copie les sources (l'app) du projet dans le container
+COPY ./ .
+
+# On expose le port 3000
+EXPOSE 3000
+
+# On copie aussi le .sh à la racine (permet de lancer les scripts d'install) 
+COPY ./server-install.sh /server-install.sh
+# Ajout des droits d'exec sur le container 
+RUN chmod +x /server-install.sh
+
+# On lance le script d'install au lancement 
+ENTRYPOINT ["/server-install.sh"]
