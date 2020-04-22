@@ -42,7 +42,7 @@ res.render('todos/index', { todos });
 - J'ai aussi modifié le package.json pour ajouté les scripts de sequelize (migrate/seed..)
 
 
-### Sequelize : 
+### Commande Sequelize (pour info - pas besoin d'exécuter) : 
 ```bash
 # Init sequelize (create database folder)
 $ sequelize init
@@ -63,3 +63,15 @@ $ docker-compose up -d
 # Go to localhost:3000/
 ```
 
+
+### Debug psql :
+```bash
+docker exec -it postgres psql DB_NAME USER_NAME
+```
+
+```sql
+# affiche toutes les tables
+\dt 
+# vérifie un select all 
+select * from "Todos";
+```
